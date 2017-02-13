@@ -2,6 +2,7 @@ package com.jimmy.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,12 +27,21 @@ public class LoginServlet extends HttpServlet {
 			User user2 = service.logIn(user);
 			
 			if(user2 != null){
+				//保存用户名和密码到cookie
+				String autoLogin = request.getParameter("autoLogin");
+				Cookie cookie = new Cookie("user", user2.getUsername()+"&"+user2.getPassword());
+				cookie.setPath("/");
+				if (autoLogin!=null) {
+					cookie.setMaxAge(60*60*24);
+				} else {
+					cookie.setMaxAge(0);
+				}
+				response.addCookie(cookie); //把cookie保存到客户端
+				
 				request.getSession().setAttribute("user", user2); //将user对象作为session域，供其他servlet使用。
 				response.getWriter().print("登陆成功，2秒后跳转到主页");
 				response.setHeader("refresh", "2;url='"+request.getContextPath()+"/index.jsp'");
 				
-//				request.setAttribute("user", user2);
-//				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
 			else {
 				response.getWriter().print("登录失败，请重新登录，2秒调转到登陆页面");

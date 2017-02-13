@@ -22,7 +22,14 @@
     <servlet-class>com.jimmy.servlet.LogoutServlet</servlet-class>
   </servlet>
 
-
+  <filter>
+  	<filter-name>AutoLoginFilter</filter-name>
+  	<filter-class>com.jimmy.filter.AutoLoginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>AutoLoginFilter</filter-name>
+  	<url-pattern>/index.jsp</url-pattern>
+  </filter-mapping>
 
 
   <servlet-mapping>
